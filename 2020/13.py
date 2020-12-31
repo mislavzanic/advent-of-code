@@ -2,7 +2,7 @@ import fileinput
 import re
 from functools import reduce
 
-def mod_inv(a,b):
+def mod_inv(a, b):
     b0 = b
     x0, x1 = 0, 1
     if b == 1: return 1
