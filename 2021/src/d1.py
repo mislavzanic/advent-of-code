@@ -5,5 +5,4 @@ def part1(l):
 
 
 def part2(l):
-    ll = [sum(l[i:i+3]) for i in range(len(l))]
-    return sum(ll[i] < ll[i+1] for i in range(len(l) - 2))
+    return sum(l[i] < l[i+3] for i in range(len(l) - 3))

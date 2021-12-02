@@ -6,7 +6,7 @@ def gcd(a: int, b: int) -> int:
     return a
 
 def mul_inv(a: int, b: int) -> int:
-    if b == 1: return 1
+    if b == 1: return b
     x0,x1,b0 = 0,1,b
     while a > 0:
         x0,x1 = x1 - (a//b)*x0,x0
