@@ -2,6 +2,7 @@ import sys
 import d1
 import d2
 import d3
+import d4
 
 if __name__ == '__main__':
     _, day, infile = sys.argv
@@ -18,4 +19,6 @@ if __name__ == '__main__':
     if day == '3':
         print(d3.part1(inlist))
         print(d3.part2(inlist))
+    if day == '4':
+        print(d4.part1(inlist))
     else: raise NotImplementedError()
