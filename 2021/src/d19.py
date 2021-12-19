@@ -1,5 +1,4 @@
 import itertools as it
-import re
 from collections import defaultdict
 
 def sdist(x,y):
@@ -48,11 +47,6 @@ def get_perm(p1, p2):
 
 
 def get_transform(pairs):
-    '''
-    returns point, permutation, rotation
-    '''
-    coord = [0,0,0]
-
     p = get_perm(pairs[0], pairs[1])
     assert p != (0,0,0)
 
@@ -67,7 +61,6 @@ def get_transform(pairs):
             return cs.pop(),p,r
     assert False, "Haven't found the relative coord"
 
-# transform((68, -1246, -43),(88, 113, -1104),(0, 1, 2),[-1, 1, -1])
 def transform_point(absolute, relative, perm, rot):
     return tuple(absolute[i] + rot[x] * relative[x] for i,x in enumerate(perm))
 
@@ -100,4 +93,4 @@ def main(l):
     for i,scanner in enumerate(scanners):
         beacons = beacons | set(point for point in scanner)
     m = [dist(s1,s2)[0] for (s1,s2) in it.combinations(scan,2)]
-    return (len(beacons)), max(m)
+    return len(beacons), max(m)
