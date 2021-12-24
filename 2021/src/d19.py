@@ -4,8 +4,10 @@ from collections import defaultdict
 def sdist(x,y):
     return sum(abs(a - b) for a,b in zip(x,y)), tuple(sorted([abs(a-b) for a,b in zip(x,y)]))
 
+
 def dist(x,y):
     return sum(abs(a - b) for a,b in zip(x,y)), tuple([abs(a-b) for a,b in zip(x,y)])
+
 
 def parse(inlist):
     scanners = []
@@ -18,12 +20,14 @@ def parse(inlist):
             scanners[-1].append(tuple(int(x) for x in line))
     return scanners
 
+
 def calc_dist(s, f):
     d = defaultdict(set)
     for i,c1 in enumerate(s):
         for j,c2 in enumerate(s):
             if i != j: d[c1].add(f(c1,c2))
     return d
+
 
 def compare(s1,s2,f):
     d1,d2 = calc_dist(s1,f), calc_dist(s2,f)
@@ -37,6 +41,7 @@ def compare(s1,s2,f):
         if len(arr):
             pairs.append(max(arr, key=lambda x: x[0])[1])
     return pairs
+
 
 def get_perm(p1, p2):
     d1,d2 = dist(p1[0],p2[0])[1],dist(p1[1],p2[1])[1]
@@ -74,11 +79,13 @@ def transform(i,j,scanners):
         scanners[j][n] = transform_point(t[0], item, t[1], t[2])
     return t[0]
 
+
 def main(l):
     scanners = parse(l)
     scan = []
     Q = [0]
     seen = set()
+    beacons = set()
     while len(Q) > 0:
         curr = Q.pop()
         if curr in seen: continue
@@ -89,7 +96,6 @@ def main(l):
                 scan.append(tp)
                 Q.append(i)
 
-    beacons = set()
     for i,scanner in enumerate(scanners):
         beacons = beacons | set(point for point in scanner)
     m = [dist(s1,s2)[0] for (s1,s2) in it.combinations(scan,2)]

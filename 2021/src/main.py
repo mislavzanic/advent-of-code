@@ -18,6 +18,11 @@ import d16
 import d17
 import d18
 import d19
+import d20
+import d21
+import d22
+import d23
+import d24
 
 if __name__ == '__main__':
     _, day, infile = sys.argv
@@ -64,4 +69,14 @@ if __name__ == '__main__':
         print(d18.main(inlist))
     elif day == '19':
         print(d19.main(inlist))
+    elif day == '20':
+        print(d20.main(inlist))
+    elif day == '21':
+        print(d21.main(inlist))
+    elif day == '22':
+        print(d22.main(inlist))
+    elif day == '23':
+        print(d23.main(inlist))
+    elif day == '24':
+        print(d24.main(inlist))
     else: raise NotImplementedError()
