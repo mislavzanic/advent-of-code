@@ -23,6 +23,7 @@ import d21
 import d22
 import d23
 import d24
+import d25
 
 if __name__ == '__main__':
     _, day, infile = sys.argv
@@ -79,4 +80,6 @@ if __name__ == '__main__':
         print(d23.main(inlist))
     elif day == '24':
         print(d24.main(inlist))
+    elif day == '25':
+        print(d25.main(inlist))
     else: raise NotImplementedError()
