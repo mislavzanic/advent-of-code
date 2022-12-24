@@ -2,6 +2,7 @@ import re
 from collections import defaultdict, Counter
 import itertools as it
 
+
 def flash(i,j,l,flashed):
     flashes = 0
     trys = list(it.permutations([-1,0,1],2))+[(1,1),(-1,-1)]

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 def cut(N, card_pos, num_of_cards):
     return (card_pos - N) % num_of_cards
 

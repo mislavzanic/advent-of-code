@@ -1,0 +1,6 @@
+*~
+.direnv
+*.in
+*.ex
+*.input
+__pycache__

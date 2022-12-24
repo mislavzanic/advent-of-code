@@ -1,0 +1,71 @@
+{
+  "nodes": {
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nix-utils",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1693399033,
+        "narHash": "sha256-yXhiMo8MnE86sGtPIHAKaLHhmhe8v9tqGGotlUgKJvY=",
+        "owner": "rycee",
+        "repo": "home-manager",
+        "rev": "f5c15668f9842dd4d5430787d6aa8a28a07f7c10",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rycee",
+        "ref": "master",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nix-utils": {
+      "inputs": {
+        "home-manager": "home-manager",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1693420861,
+        "narHash": "sha256-8+3EtIoAv56LMU5AbNO91vh7tnvFNvTp5PqVR3FVVSc=",
+        "owner": "mislavzanic",
+        "repo": "nix-utils",
+        "rev": "9a9a711003fb44bf7f42ec4d1f6efe26c0ff7716",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mislavzanic",
+        "repo": "nix-utils",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1701415864,
+        "narHash": "sha256-anOwYa5rprxooWLIXtqu+sCLGhz16fEhPA9KRt3G/qg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "cdc1b4599fb247127f3c24cee8320085ecdd6a72",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nix-utils": "nix-utils",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

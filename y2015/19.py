@@ -1,109 +1,99 @@
+import functools
 import os
 import re
 from collections import defaultdict
 import itertools as it
 import random
 import sys
+import aoc_util.advent as aoc
 
-def main():
-    result = '''C(CaSi(BSi(F)TiBPTiTiBF)PBCaSiThSi(TiBPBPMg)CaSi(TiMg)CaSiThCaSi(F)(Si(F)TiTiBF)CaCaSi(SiThCaCaSi(Mg)F,Si(F,CaF)SiThCaSiThPBPTiMg)CaP(SiAl)PBCaCaSi(F,SiThCa(F))CaCaSi(PBSi(F)Mg,CaCaCaCaSiThCaCaSiAl)CaCaSi(PBSiAl)BCaCaCaCaSiThCaPBSiThPBPBCaSi(F,F)SiThCaSi(F)BCaCaSi(F,F)SiThCaPBSiThCaSi(PMg)(F)PTiBCaP(F)CaCaCaCaSi(CaCaSi(F,F)F)BCaSiThF)ThSiThSi(Ti(PMg)F)CaSiThCaPBCaSi(BF)CaCaP(CaCaPMg)Si(F,F)CaSiTh(PBPMg)'''
-    rules = '''Al => ThF
-    Al => Th(F)
-    B => BCa
-    B => TiB
-    B => Ti(F)
-    Ca => CaCa
-    Ca => PB
-    Ca => P(F)
-    Ca => Si(F,F)
-    Ca => Si(Mg)
-    Ca => SiTh
-    F => CaF
-    F => PMg
-    F => SiAl
-    H => C(Al)
-    H => C(F,F,F)
-    H => C(F,Mg)
-    H => C(Mg,F)
-    H => HCa
-    H => N(F,F)
-    H => N(Mg)
-    H => NTh
-    H => OB
-    H => O(F)
-    Mg => BF
-    Mg => TiMg
-    N => C(F)
-    N => HSi
-    O => C(F,F)
-    O => C(Mg)
-    O => HP
-    O => N(F)
-    O => OTi
-    P => CaP
-    P => PTi
-    P => Si(F)
-    Si => CaSi
-    Th => ThCa
-    Ti => BP
-    Ti => TiTi
-    e => HF
-    e => NAl
-    e => OMg'''
+day = aoc.Input(19, 2015)
 
-    d = parse(rules)
-    keys = list(d.keys())
-    keys.sort(key=lambda x: len(x), reverse=True)
+rules, goal = day.string.split('\n\n')
+values = []
+goal = goal.strip()
+splitted = defaultdict(list)
+C = []
+# grammar = defaultdict(str)
+grammar = defaultdict(list)
+for rule in rules.split('\n'):
+	if rule == '': continue
+	a, b = rule.split(' => ')
+	# grammar[b] = a
+	grammar[a].append(b)
+	splitted[b] = re.findall('[A-Z][^A-Z]*', b)
+	values.append(b)
 
-    minimum = 10000
 
-    # def solve(r: str):
-    #     step = 0
-    #     while r != 'e':
-    #         seen = False
-    #         for key in keys:
-    #             pos = r.find(key)
-    #             if pos != -1:
-    #                 r = r[:pos] + d[key][0] + r[pos + len(key):]
-    #                 seen = True
-    #                 step += 1
-    #                 break
-    #         if not seen:
-    #             print(r)
-    #             break
-    #     return step
+for k,v in splitted.items():
+	for item in v:
+		if item not in grammar.keys():
+			C.append(item)
 
-    def recurse(r, m, step):
-        while r != 'e':
-            seen = False
-            for key in keys:
-                pos = r.find(key)
-                if pos != -1:
-                    if r == "e":
-                        print(step)
-                        sys.exit(1)
-                    found, steps = recurse(r[:pos] + d[key][0] + r[pos + len(key):], m, step + 1)
-                    if found:
-                        seen = True
-                        if steps < m: m = steps
-                        if minimum > m: print("new min: " + str(m))
-                        sys.exit(1)
-            if not seen:
-                # print(r, step)
-                return False, -1
-        if step < m: m = step
-        print(m)
-        return True, m
 
-    recurse(result, minimum, 0)
+def match_rules(word, start, end, rules) -> int:
+	global goal, DP
+	rule_list = []
+	key = (word, start, end, rules)
 
-def parse(rules: str):
-    d = defaultdict(list)
-    r = rules.split('\n')
-    for rule in r:
-        a  = re.findall('([a-zA-Z]+) => ([a-zA-Z]+)', rule)[0]
-        d[a[1]].append(a[0])
-    return d
+	if key in DP:
+		return DP[key]
 
-if __name__ == '__main__':
-    main()
+	if word[start:end] == rules:
+		return match(word,start,end,rules)
+
+	rule_list = re.findall('[A-Z][^A-Z]*', rules)
+
+	if len(rule_list) == 1:
+		return match(word, start, end, rule_list[0])
+	if len(rule_list) == 0:
+		return -1
+
+
+	for i in range(start + 1, end):
+		if word[i:end][0].islower():
+			DP[key] = -1
+			continue
+		m1 = match(word, start, i, rule_list[0])
+		m2 = match_rules(word, i, end, ''.join(rule_list[1:]))
+		if m1 != -1 and m2 != -1:
+			DP[key] = m1 + m2
+			return m1 + m2
+	return -1
+
+
+DP = {}
+def match(word, start, end, rule) -> int:
+	global grammar, values, DP, C
+
+	key = (word, start, end, rule)
+
+	if word[start:end][0].islower():
+		DP[key] = -1
+		return -1
+
+	if key in DP: return DP[key]
+
+	if word[start:end] in C:
+		DP[key] = -1 if word[start:end] != rule else 0
+		return DP[key]
+
+	if word[start:end] == rule:
+		DP[key] = 0
+		return 0
+
+	else:
+		for option in grammar[rule]:
+			m = match_rules(word, start, end, option)
+			if m != -1:
+				DP[key] = m + 1
+				return m + 1
+	DP[key] = -1
+	return -1
+
+
+# print(goal, grammar)
+print(match(goal, 0, len(goal), 'e'), 2)
+
+# print(dfs(goal))
+# print(bottomUp('e'))
