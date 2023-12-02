@@ -24,7 +24,7 @@
           ps.scipy
           ps.sympy
           ps.ipython
-          ps.termcolor
+          ps.colorama
         ]))
         nodePackages.pyright
         poetry

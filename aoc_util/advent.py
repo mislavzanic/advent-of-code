@@ -2,7 +2,7 @@ import os
 import requests
 from datetime import date
 from bs4 import BeautifulSoup
-from termcolor import colored
+from colorama import Fore
 
 class Input:
     def __init__(self, day=-1, year=-1, input_path=''):
@@ -42,11 +42,10 @@ class Input:
 	)
         soup = BeautifulSoup(response.text, 'html.parser')
         if soup is not None and soup.article is not None:
-            color = 'red'
+            color = Fore.RED
             if "That's the right answer!" in soup.article.text:
-                color = 'yellow'
-                message = termcolor.colored(soup.article.text, color)
-                print(message)
+                color = Fore.YELLOW
+            print(color + soup.article.text)
 
     def lines(self): return self._lines
 
