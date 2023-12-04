@@ -1,6 +1,5 @@
 import collections
 from typing import get_origin
-import sympy
 # from z3 import If, Bool, Solver, And, Int, Tactic
 import itertools as it
 import functools
@@ -10,6 +9,7 @@ import re
 import ast
 import math
 from aoc_util.advent import Input
+import aoc_util.utils
 
 def blizzard_move(bl_pos):
 	global blizzard, X, Y
@@ -29,14 +29,15 @@ def blizzard_move(bl_pos):
 
 	return bp
 
-day = Input()
+day = Input(day=24, year=2022)
 
 blizzard = {'>': (0,1), '^':(-1,0), 'v':(1,0), '<':(0,-1)}
 bl = []
 wall = []
-end = (len(day.lines) - 1, len(day.lines[-1]) - 2)
-X, Y = len(day.lines), len(day.lines[-1])
-for i,line in enumerate(day.lines):
+lines = day.lines()
+end = (len(lines) - 1, len(lines[-1]) - 2)
+X, Y = len(lines), len(lines[-1])
+for i,line in enumerate(lines):
 	for j, char in enumerate(line):
 		if char == '#': wall.append((i,j))
 		if char in '<>^v': bl.append((char, (i,j)))
@@ -53,31 +54,36 @@ while True:
 	if sorted(list(bl)) == sorted(start_bl): break
 	blizzards.append([x for x in bl])
 
-def bfs(start, end, M):
-	global period, wall, blizzards
-	SEEN = set()
-	start_bl = blizzards[M % period]
-	Q = [(start, 0, start_bl)]
-	while len(Q) > 0:
-		curr, minute, bl = Q.pop(0)
-		key = (curr, minute % period)
-		if key in SEEN: continue
-		SEEN.add(key)
-		if curr == end:
-			return minute
+def callback(M):
+        global period, wall, blizzards
+        def find_next(curr):
+                pos, minute = curr
+                cx, cy = pos
+                bl = blizzards[(M + minute + 1) % period]
+                bl_pos = [x[1] for x in bl]
+                next_moves = []
+                for move in [(-1,0), (1,0), (0,-1), (0,1), (0,0)]:
+                        x,y = move
+                        if (cx + x, cy + y) in bl_pos + wall: continue
+                        if 0 <= cx + x < X and 0 <= cy + y < Y:
+                                next_moves.append(((cx + x, cy + y), minute + 1))
+                return next_moves
+        return find_next
 
-		cx, cy = curr
-		bl = blizzards[(M + minute + 1) % period]
-		bl_pos = [x[1] for x in bl]
-		for move in [(-1,0), (1,0), (0,-1), (0,1), (0,0)]:
-			x,y = move
-			if (cx + x, cy + y) in bl_pos + wall: continue
-			if 0 <= cx + x < X and 0 <= cy + y < Y:
-				Q.append(((cx + x, cy + y), minute + 1, bl))
-	assert False, (minute, len(SEEN))
+def _bfs(start, end, M):
+    global period, wall, blizzards
+    path = aoc_util.utils.bfs([(start, 0)], end, lambda x: x[0] == end, callback(M), lambda x: (x[0], x[1] % period))
+    assert path != None, "No Path"
+    l = [end]
+    curr = end
+    for v in path.values():
+            for item in v:
+                    if item[0] == end:
+                            return item[1]
+    return None
 
-M = bfs(start, end, 0)
+M = _bfs(start, end, 0)
 print(M)
-M1 = bfs(end, start, M)
-M2 = bfs(start, end, M + M1)
+M1 = _bfs(end, start, M)
+M2 = _bfs(start, end, M + M1)
 print(M + M1 + M2)
