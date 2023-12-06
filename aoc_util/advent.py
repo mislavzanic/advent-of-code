@@ -3,12 +3,13 @@ import requests
 from datetime import date
 from bs4 import BeautifulSoup
 from colorama import Fore
+import yaml
 
 class Input:
     def __init__(self, day=-1, year=-1, input_path=''):
         self._day = date.today().day if day == -1 else day
         self._year = date.today().year if year == -1 else year
-        self._input_path = f'input/{self._day}.in' if input_path == '' else input_path
+        self._input_path = f'{os.getenv("INPUT_DIR")}/{self._day}.in' if input_path == '' else input_path
         self._token_path = f'{os.environ["XDG_CONFIG_HOME"]}/.aoc_token' if os.environ["XDG_CONFIG_HOME"] != '' else f"{os.environ['HOME']}/.config/.aoc_token"
         self._session = open(self._token_path).readline().strip()
 
