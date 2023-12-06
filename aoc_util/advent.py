@@ -6,8 +6,8 @@ from colorama import Fore
 
 class Input:
     def __init__(self, day=-1, year=-1, input_path=''):
-        self._day = date.today().day if day == -1 else day
-        self._year = date.today().year if year == -1 else year
+        self._day = day
+        self._year = year
         self._input_path = f'{os.getenv("INPUT_DIR")}/{self._day}.in' if input_path == '' else input_path
         self._token_path = f'{os.environ["XDG_CONFIG_HOME"]}/.aoc_token' if os.environ["XDG_CONFIG_HOME"] != '' else f"{os.environ['HOME']}/.config/.aoc_token"
         self._session = open(self._token_path).readline().strip()
@@ -17,7 +17,7 @@ class Input:
 		f'https://adventofcode.com/{self._year}/day/{self._day}/input',
 		cookies={"session":self._session},
 		headers={
-			'User-Agent':'python requests by mislavzanic3@gmail.com'
+                    'User-Agent':'python requests by mislavzanic3@gmail.com'
 		}
 	    )
             with open(self._input_path, 'w') as f:
