@@ -9,8 +9,7 @@ class Input:
         self._day = day
         self._year = year
         self._input_path = f'{os.getenv("INPUT_DIR")}/{self._day}.in' if input_path == '' else input_path
-        self._token_path = f'{os.environ["XDG_CONFIG_HOME"]}/.aoc_token' if os.environ["XDG_CONFIG_HOME"] != '' else f"{os.environ['HOME']}/.config/.aoc_token"
-        self._session = open(self._token_path).readline().strip()
+        self._session = open(os.getenv("TOKEN_FILE")).readline().strip()
 
         if not os.path.exists(self._input_path):
             response = requests.get(

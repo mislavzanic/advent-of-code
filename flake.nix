@@ -38,6 +38,7 @@
         export PYTHONPATH="$(pwd):$PYTHONPATH"
         export INPUT_DIR="$(pwd)/input"
         export AOC_RUN="$(pwd)/run.py"
+        export TOKEN_FILE="$HOME/.config/.aoc_token"
       '';
     };
   };
