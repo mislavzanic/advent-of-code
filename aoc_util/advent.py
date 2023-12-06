@@ -3,7 +3,6 @@ import requests
 from datetime import date
 from bs4 import BeautifulSoup
 from colorama import Fore
-import yaml
 
 class Input:
     def __init__(self, day=-1, year=-1, input_path=''):

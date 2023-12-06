@@ -1,3 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+[ -d "$INPUT_DIR" ] || mkdir "$INPUT_DIR"
 python "$AOC_RUN" "$@"
