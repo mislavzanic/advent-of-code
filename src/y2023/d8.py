@@ -3,7 +3,6 @@ from collections import defaultdict
 import math
 import re
 
-
 def parse(day: Input):
     d = defaultdict(list)
     path, graph = day.string().split("\n\n")
@@ -28,8 +27,7 @@ def p2(day: Input):
     path, graph = parse(day)
     start = [x for x in graph.keys() if x[-1] == 'A']
     end = [x for x in graph.keys() if x[-1] == 'Z']
-    loops = [find_end(x, end, path, graph) for x in start]
-    return math.lcm(*loops)
+    return math.lcm(*[find_end(x, end, path, graph) for x in start])
         
 
     
