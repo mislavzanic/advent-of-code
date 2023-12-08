@@ -7,8 +7,9 @@ def _search(Q: List[Any], end, terminate, neighbor_func, hash_func, search_type)
     while Q:
         curr = Q.pop(search_type)
         if terminate(curr): return path
-        if hash_func(curr) in seen: continue
-        seen.add(hash_func(curr))
+        if hash_func is not None:
+            if hash_func(curr) in seen: continue
+            seen.add(hash_func(curr))
         neighbors = neighbor_func(curr)
         path[curr] += neighbors
         Q += neighbors

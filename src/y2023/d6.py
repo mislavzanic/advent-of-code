@@ -1,23 +1,27 @@
 from math import sqrt
 
-def main(day):
-    parts = []
+def p1(day):
+    time, dist = [], []
     for line in day.lines():
         if line.startswith("Time:"):
-            time1 = list(map(int, filter(lambda x: x != "", line.split(":")[1].split(" "))))
-            time2 = [int("".join(list(filter(lambda x: x != "", line.split(":")[1].split(" ")))))]
-            parts.append([time1])
-            parts.append([time2])
+            time = list(map(int, filter(lambda x: x != "", line.split(":")[1].split(" "))))
         if line.startswith("Distance:"):
-            dist1 = list(map(int, filter(lambda x: x != "", line.split(":")[1].split(" "))))
-            dist2 = [int("".join(list(filter(lambda x: x != "", line.split(":")[1].split(" ")))))]
-            parts[0].append(dist1)
-            parts[1].append(dist2)
+            dist = list(map(int, filter(lambda x: x != "", line.split(":")[1].split(" "))))
+    return solve(time, dist)
 
-    for part in [1,2]:
-        p = 1
-        time, dist = parts[part-1]
-        for j, _ in enumerate(time):
-            bounds = [int((-time[j] - sqrt(pow(time[j], 2) - 4 * dist[j])) // (-2)), int((-time[j] + sqrt(pow(time[j], 2) - 4 * dist[j])) // (-2))]
-            p *= (max(bounds) - min(bounds))
-        print(p)
+def p2(day):
+    time, dist = [], []
+    for line in day.lines():
+        if line.startswith("Time:"):
+            time = [int("".join(list(filter(lambda x: x != "", line.split(":")[1].split(" ")))))]
+        if line.startswith("Distance:"):
+            dist = [int("".join(list(filter(lambda x: x != "", line.split(":")[1].split(" ")))))]
+    return solve(time, dist)
+
+def solve(time, dist):
+    p = 1
+    for d, t in zip(dist, time):
+        bounds = [int((-t - sqrt(pow(t, 2) - 4 * d)) // (-2)), int((-t + sqrt(pow(t, 2) - 4 * d)) // (-2))]
+        p *= (max(bounds) - min(bounds))
+    return p
+    
