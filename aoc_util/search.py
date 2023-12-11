@@ -1,5 +1,9 @@
 from collections import defaultdict
+import itertools
 from typing import DefaultDict, List, Any, Union
+
+def diff_loop():
+    return itertools.product([-1,0,1],[-1,0,1])
 
 def _search(Q: List[Any], end, terminate, neighbor_func, hash_func, search_type) -> Union[None, DefaultDict]:
     path = defaultdict(list)
