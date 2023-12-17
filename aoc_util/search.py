@@ -5,7 +5,7 @@ from typing import DefaultDict, List, Any, Union
 def diff_loop():
     return itertools.product([-1,0,1],[-1,0,1])
 
-def _search(Q: List[Any], end, terminate, neighbor_func, hash_func, search_type) -> Union[None, DefaultDict]:
+def _search(Q: List[Any], terminate, neighbor_func, hash_func, search_type) -> Union[None, DefaultDict]:
     path = defaultdict(list)
     seen = set()
     while Q:
@@ -20,8 +20,8 @@ def _search(Q: List[Any], end, terminate, neighbor_func, hash_func, search_type)
     return None
     
 
-def dfs(Q: List[Any], end: Any, terminate, neighbor_func, hash_func) -> Union[None, DefaultDict]:
-    return _search(Q, end, terminate, neighbor_func, hash_func, -1)
+def dfs(Q: List[Any], terminate, neighbor_func, hash_func) -> Union[None, DefaultDict]:
+    return _search(Q, terminate, neighbor_func, hash_func, -1)
     
-def bfs(Q: List[Any], end: Any, terminate, neighbor_func, hash_func) -> Union[None, DefaultDict]:
-    return _search(Q, end, terminate, neighbor_func, hash_func, 0)
+def bfs(Q: List[Any], terminate, neighbor_func, hash_func) -> Union[None, DefaultDict]:
+    return _search(Q, terminate, neighbor_func, hash_func, 0)
