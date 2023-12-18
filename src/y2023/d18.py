@@ -1,3 +1,4 @@
+from functools import reduce
 import itertools
 from aoc_util.advent import Input
 from aoc_util.search import diff_loop
@@ -22,42 +23,48 @@ def parse(lines, parser):
     ))
     return list(coords.keys()), {x:i for i,x in enumerate(cx)}, {x:i for i,x in enumerate(cy)}
 
-def dig(instr, coord_x_map, coord_y_map):
-    hole = {}
-    for i in range(len(instr)):
-        x, y = instr[i]
-        nx, ny = instr[((i+1) % len(instr))]
-        map_x, map_y = coord_x_map[x], coord_y_map[y]
-        n_map_x, n_map_y = coord_x_map[nx], coord_y_map[ny]
-        for j in range(min(map_x,n_map_x), max(map_x,n_map_x) + 1):
-            hole[j,n_map_y] = 1
-        for j in range(min(map_y,n_map_y), max(map_y,n_map_y) + 1):
-            hole[n_map_x,j] = 1
+def dig(coords, coord_x_map, coord_y_map):
+    mapped_coords = map(
+       lambda pair: (
+           (coord_x_map[pair[0][0]], coord_y_map[pair[0][1]]),
+           (coord_x_map[pair[1][0]], coord_y_map[pair[1][1]])
+       ),
+       zip(coords, coords[1:] + [coords[0]])
+    )
 
+    def fill(d):
+        inside = {(coord_x_map[0] + 1, coord_y_map[0] + 1)}
+        while inside:
+            x,y = inside.pop()
+            if (x,y) in d: continue
+            d[x,y] = 1
+            for (i,j) in diff_loop():
+                if (x+i,y+j) in d: continue
+                inside.add((x+i,y+j))
+        return d
 
-    inside = {(coord_x_map[0] + 1, coord_y_map[0] + 1)}
-    while inside:
-        x,y = inside.pop()
-        if (x,y) in hole: continue
-        hole[x,y] = 1
-        for (i,j) in diff_loop():
-            if (x+i,y+j) in hole: continue
-            inside.add((x+i,y+j))
+    hole = fill(reduce(
+        lambda x, y: x | y, [{
+            (j,ny):1 for j in range(min(x,nx), max(x,nx) + 1)
+        } | {
+            (nx,j):1 for j in range(min(y,ny), max(y,ny) + 1)
+        } for ((x,y), (nx,ny)) in mapped_coords]
+    ))
 
     s = []
-    r_x_map = {v:k for k,v in coord_x_map.items()}
-    r_y_map = {v:k for k,v in coord_y_map.items()}
+    rx_map = {v:k for k,v in coord_x_map.items()}
+    ry_map = {v:k for k,v in coord_y_map.items()}
 
     Mx = max(hole.keys(), key=lambda x: x[0])[0] + 1
     My = max(hole.keys(), key=lambda x: x[1])[1] + 1
 
-    for i in range(0, Mx):
-        a = 1 if i+1 not in r_x_map else abs(r_x_map[i] - r_x_map[i+1])
-        for j in range(0, My):
-            if (i,j) not in hole: continue
-            b = 1 if j+1 not in r_y_map else abs(r_y_map[j] - r_y_map[j+1])
-            s.append(a * b)
-    return sum(s)
+    return sum(
+        (1 if i+1 not in rx_map else abs(rx_map[i] - rx_map[i+1])) *
+        (1 if j+1 not in ry_map else abs(ry_map[j] - ry_map[j+1]))
+        for i in range(0, Mx)
+        for j in range(0,My)
+        if (i,j) in hole
+    )
 
 def p2(day: Input):
     return dig(*parse(day.lines(), lambda _,b,c: ({'0': 'R', '1':'D', '2':'L', '3': 'U'}[c[-2]], int(c[2:-2], 16))))
