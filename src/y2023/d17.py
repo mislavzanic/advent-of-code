@@ -1,5 +1,5 @@
 from aoc_util.advent import Input
-from queue import PriorityQueue
+import heapq
 
 '''
 970 -> too high
@@ -8,13 +8,13 @@ p2 1104 -> to high
 '''
 
 def dijkstra(matrix, turn_condition, stop_condition):
-    Q = PriorityQueue()
-    Q.put((0, 0,0,(1,0),0))
-    Q.put((0, 0,0,(0,1),0))
+    Q = []
+    Q.append((0, 0,0,(1,0),0))
+    Q.append((0, 0,0,(0,1),0))
     dirs = [(1,0),(-1,0),(0,1),(0,-1)]
     seen = set()
     while Q:
-        heat, x, y, direction, steps = Q.get()
+        heat, x, y, direction, steps = heapq.heappop(Q)
         key = (x,y,direction,steps)
         if key in seen: continue
         seen.add(key)
@@ -25,7 +25,7 @@ def dijkstra(matrix, turn_condition, stop_condition):
             if (-dx,-dy) == direction: continue
             if not turn_condition((dx,dy), direction, steps): continue
             new_key = (x+dx,y+dy,(dx,dy),1 if (dx,dy) != direction else steps+1)
-            Q.put((heat + matrix[x+dx][y+dy], *new_key))
+            Q.append((heat + matrix[x+dx][y+dy], *new_key))
     return None
 
 
