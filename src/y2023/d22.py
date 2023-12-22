@@ -3,12 +3,13 @@ from aoc_util.advent import Input
 import itertools as it
 
 def parse(day:Input):
-    bricks = []
-    for line in day.lines():
-        start, end = list(map(lambda x: list(map(int, x.split(','))), line.split('~')))
-        bricks.append([start, end])
-    bricks = list(sorted(bricks, key=lambda x: x[0][2]))
-    return bricks
+    return list(sorted(
+        [
+            list(map(lambda x: list(map(int, x.split(','))), line.split('~')))
+            for line in day.lines()
+        ],
+        key=lambda x: x[0][2]
+    ))
 
 def fall(bricks):
     d = Counter()
