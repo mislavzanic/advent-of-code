@@ -26,6 +26,7 @@
               ps.sympy
               ps.ipython
               ps.colorama
+              ps.networkx
             ];
           in [
             (python311.withPackages pythonPackages)
